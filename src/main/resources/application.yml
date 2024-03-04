@@ -1,0 +1,29 @@
+spring:
+  main:
+    web-application-type: reactive
+  config:
+    import: configserver:http://localhost:9196
+  cloud:
+    config:
+      uri:
+        - http://localhost:9196
+    gateway:
+      routes:
+        - id: order-service
+          uri: lb://food-order-service
+          predicates:
+            - Path=/order/**
+#          filters:
+#            - name: CircuitBreaker
+#              args:
+#                name: order-service-fallback
+#                fallback-uri: forward:/orderFallback  # Corrected fallback URI
+        - id: payment-service
+          uri: lb://food-payment-service
+          predicates:
+            - Path=/payment/**
+#          filters:
+#            - name: CircuitBreaker
+#              args:
+#                name: payment-service-fallback
+#                fallback-uri: forward:/paymentFallback  # Corrected fallback URI
